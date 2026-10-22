@@ -64,3 +64,50 @@ WHERE model_name LIKE '%mini%';
 --benim tahminim şuan 1 satır döneceği
 --tahminim malesef yanlış çıktı 3 satır döndü sebebi ise şu ben gemini yi saymadım ben sadece gpt-4o-mini yi saydım
 --claude dan aldığım bilgiye göre LİKE anlama değil harflere bakıyorumuş bu yüzden yanlış tahmin yaptım.
+
+--SORU 11: Önce kullanıcıya sonra ise kullanıcı için maliyetine göre pahalıdan ucuza sıralama
+SELECT *
+FROM llm_calls
+ORDER BY user_name, cost_usd DESC;
+--12 satır döndü . Deniz in 11 id numaralı çağrısı en başta duruyor çünkü boş değer olduğu için onu en başa koydu 
+
+--SORU 12: En pahalı 3 çağrı
+SELECT *
+FROM llm_calls
+ORDER BY cost_usd DESC
+NULLS LAST
+LIMIT 3; 
+-- 3 satır dönndü. en pahalı olan 7 id numaralı çağrı ancak ilk yazdığımda en başta boş değer çıktı
+-- bende bunun üzerine limiti 4 e çıkardım ve ilk 3 ü gördüm ama sonra NULL LAST ı öğrenip ekledim
+
+--SORU 13: Hangi iş türleri var?
+SELECT DISTINCT task_type
+FROM llm_calls;
+-- 5 satır döndü. Bunlar: code,summarize,chat,translate,classify. 
+
+--SORU 14: Kullanıcı adlarını Türk alfabesine göre doğru biçimde tekrarsız listele
+-- COLLATE ile
+SELECT DISTINCT user_name COLLATE "tr-TR-x-icu" AS user_name
+FROM llm_calls
+ORDER BY user_name;
+---- COLLATE olmadan
+SELECT DISTINCT user_name
+FROM llm_calls
+ORDER BY user_name;
+-- İki sorgu da 6 satır döndü ve sıralama değişmedi.
+-- Çünkü isimlerin baş harfleri Türkçe ve İngilizce alfabede aynı sırada.
+-- 6. satır boş: 12 numaralı çağrının kullanıcısı NULL, DISTINCT onu da bir değer sayıyor.
+-- İlk denemede "for SELECT DISTINCT, ORDER BY expressions must appear in select list" hatası aldım.
+-- COLLATE'i ORDER BY yerine SELECT satırına taşıyınca düzeldi.
+
+--SORU 15: 14 Ekimden sonra yapılan 1 saniyeden yavaş çağrılar , yavaştan hızlıya doğru.
+SELECT id, model_name, latency_ms
+FROM llm_calls
+WHERE created_at >= '2026-10-14' AND latency_ms > 1000
+ORDER BY latency_ms DESC;
+-- 6 satır döndü. büyükten küçüğe id numaraları şöyle: 7>4>8>10>11>6 
+-- İlk denemede latency_ms > 1000 yerine < kullandım ve 3 satır döndü sonra tabloyu kontrol ettim.
+--Yanlış olduğunu görünce tekrar bakınca onu düzelttim ve doğru sonuca ulaştım.
+
+--
+
