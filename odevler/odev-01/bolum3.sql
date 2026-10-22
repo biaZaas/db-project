@@ -108,6 +108,7 @@ ORDER BY latency_ms DESC;
 -- 6 satır döndü. büyükten küçüğe id numaraları şöyle: 7>4>8>10>11>6 
 -- İlk denemede latency_ms > 1000 yerine < kullandım ve 3 satır döndü sonra tabloyu kontrol ettim.
 --Yanlış olduğunu görünce tekrar bakınca onu düzelttim ve doğru sonuca ulaştım.
+-- 14 ekimi dahil etmeli miydim bilmiyorum ama ben dahil ettim etmeseydim 4 id numaralı çağrı dahil olmazdı.
 
---
+
 
