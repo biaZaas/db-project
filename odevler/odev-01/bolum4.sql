@@ -47,4 +47,36 @@ SELECT model_name, count(*), sum(cost_usd) AS total_cost
 FROM llm_calls
 GROUP BY model_name
 ORDER BY total_cost DESC;
---
+--7 satır döndü. En pahalı claude sonnet çıktı (0.0384) ve 2 kere kullanılmış , en ucuz ise gpt 4o mini çıktı (0.0001).
+-- En ucuz çıkan gpt-4o-mini 1 kere kullanılmış.
+--2.sırada olan gpt-4o 3 kez kullanılmış ama en pahalı olmamasının sebebi faturası olmayan 11 numaralı çağrı
+--Bu çağrının maliyetide eklense en pahalı  gpt-4o olur. 
+
+--SORU 8:Her kullanıcının her iş türünden kaç çağrısı var?
+SELECT COALESCE(user_name, 'bilinmiyor') AS user_name, task_type, count(*)
+FROM llm_calls
+GROUP BY user_name, task_type;
+--12 satır döndü
+--1 adet boş chat çağrısı yapılmış kimden olduğu belli değil.
+--Bilinmeyen kullanıcı için kutu boş kalması diye claude un tavsiyesiyle COALESCE(user_name, 'bilinmiyor') ekledim. 
+
+--SORU 9:İkiden fazla çağrı almış modeller.
+SELECT model_name, count(*)
+FROM llm_calls
+GROUP BY model_name
+HAVING count(*) > 2;
+--1 satır döndü. Bu gpt-4o ve 3 defa çağrı yapılmış. 
+
+--SORU 10:Sadece 500 ms’den yavaş çağrıları hesaba kat; en az 2 çağrısı olan modelleri ortalama gecikmesiyle göster.
+SELECT model_name, count(*), avg(latency_ms)
+FROM llm_calls
+WHERE latency_ms > 500
+GROUP BY model_name
+HAVING  count(*) >= 2 ;
+--WHERE 2 çağrıyı attı 3 ve 9 id numaraları çağrıları 500 ms den yavaş ama 2 den fazla veya eşit kullanılmış
+--HAVING 3 modeli attı gemini-flash ve gemini-pro, 1 er çağrıları olduğu için elendi , llama-3-8b ise WHERE
+-- tarafından 1 çağrısı 500ms in altında olduğu için 2 çağrıdan 1 düştü ve elendi. 
+-- 1 üst satırda bahsettiğimiz olay WHERE, HAVING den önce çalıştığı için oldu 
+--WHERE in elediklerinden kalanları gördü sadece HAVING tam tersi olsaydı llama-3-8b HAVING den geçerdi. 
+
+--SORU 11:
