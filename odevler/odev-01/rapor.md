@@ -5,17 +5,17 @@
 
 ---
 
-**Ödev no:** Ödev ____     **Hafta:** ____     **Tarih:** ____ / ____ / 2026
+**Ödev no:** Ödev _1___     **Hafta:** __1-5__     **Tarih:** __23__ / _10___ / 2026
 
-**Ad Soyad:** ______________________________  **Öğrenci No:** ______________
+**Ad Soyad:** ___İsmet Paşalioğlu___________________________  **Öğrenci No:** ___202507131053___________
 
-**Program:** ☐ Yapay Zeka Operatörlüğü  ☐ Robotik ve Yapay Zeka
+**Program:** [X] Yapay Zeka Operatörlüğü  ☐ Robotik ve Yapay Zeka
 
-**Kullandığım veritabanı:** ☐ `llm_ops`  ☐ `robot_fleet`
+**Kullandığım veritabanı:** [X] `llm_ops`  ☐ `robot_fleet`
 
-**PR bağlantısı:** `https://github.com/` ______________________________________
+**PR bağlantısı:** `https://github.com/biaZaas/db-project/pull/1'
 
-**Commit sayısı:** ______
+**Commit sayısı:** 12
 
 ---
 
@@ -23,32 +23,28 @@
 
 Bu ödevde neyi çözdüğünü 3-5 cümleyle anlat. Soru listesini tekrar yazma; **ne öğrendiğini** yaz.
 
-______________________________________________________________________
+Kodları manuel izlemeyi öğrendim.
 
-______________________________________________________________________
+Bölüm 3'te WHERE, LIKE, BETWEEN, ORDER BY gibi araçları öğrendim.
 
-______________________________________________________________________
-
-______________________________________________________________________
+Bölüm 4 te gruplamayı öğrendim.
 
 ---
 
 ## 2. Sonuçlar
 
-Çözdüğüm soru sayısı: ______ / ______     Bonus: ☐ denedim ☐ denemedim
+Çözdüğüm soru sayısı: 37 / 37     Bonus: denemedim
 
-En zorlandığım soru: **Soru ____**
+En zorlandığım soru: **Soru: Bölüm3 soru 14**
 
 Neden zorlandım:
 
-______________________________________________________________________
-
+COLLATE i  nereye yazıcağımı bulamadım ve uzun bir süre çözemedim ORDER BY içine yazıyordum
 ______________________________________________________________________
 
 Nasıl çözdüm:
 
-______________________________________________________________________
-
+Claude bana DISTINCT kullanınca ORDER BY da ki ifadenin SELECT te ki ile aynı olması gerektiğini söyledi bende COLLATE i SELECT satırına taşıdım çalıştı
 ______________________________________________________________________
 
 ---
@@ -59,7 +55,7 @@ Bir sorgu beklediğinden farklı sayıda satır döndürdü mü? Hangisi ve nede
 
 (Eksik veri, koşul önceliği, büyük/küçük harf, birim dönüşümü… Böyle bir durumla karşılaşmadıysan "karşılaşmadım" yaz, ama önce iyi bak.)
 
-**Soru no:** ______
+**Soru no:** karşılaşmadım
 
 **Beklediğim:** ______ satır   **Gelen:** ______ satır
 
@@ -77,11 +73,11 @@ Dönem boyunca hata mesajı okumayı öğreniyoruz. Bu hafta aldığın bir hata
 
 **Hata mesajı:**
 
-______________________________________________________________________
+_________syntax error at or near "SELECT"_____________________________________________________________
 
 **Sebebi ve çözümü:**
 
-______________________________________________________________________
+iki sorguyu alt alta yazdım ama ilkinin sonuna ; koymayı unuttum. PostgreSQL sorgunun bittiğini anlamadı ve ikinci SELECT’i birincinin devamı sandı. İlk sorgunun sonuna noktalı virgül ekleyince iki sorgu da çalıştı.
 
 ______________________________________________________________________
 
@@ -89,19 +85,23 @@ ______________________________________________________________________
 
 ## 5. Yapay zeka kullanım beyanı
 
-☐ Bu ödevde yapay zeka aracı **kullanmadım.**
 
-☐ Kullandım, aşağıda belirttim:
+x☐ Kullandım, aşağıda belirttim: Kullandım
 
-| Soru no | Araç | Ne sordum (özet) | Cevabı nasıl doğruladım |
-|---|---|---|---|
-| | | | |
-| | | | |
+| Soru no   | Araç | Ne sordum (özet)             | Cevabı nasıl doğruladım |
+|B3,B4 hepsi|claude|hangi fonksiyonların gerektiği|çalıştırdım, tabloyla karşılaştırdım
+|B3S14,B4S15 |claude |yorumlama yardımı           |okudum ve kendimce doğruladım
+| |          |claude | Kurulum                    |
 | | | | |
 
 > "Nasıl doğruladım" sütunu en önemlisi. "Çalıştırdım, 4 satır döndü, tabloyla karşılaştırdım" gibi somut bir şey yaz.
 
----
+---## Özellikle sorulan dört konu
+
+1. Parantez tuzağı: İlk denemede fark çıkmadı (3 ve 3), çünkü code çağrılarının hepsi zaten 0.01'den pahalıydı. Şartların sırasını değiştirince 4 satır geldi, ucuz bir çeviri çağrısı da listeye girdi. AND, OR'dan önce çalıştığı için parantez şart.
+2. Türkçe sıralama:Hiçbir isim yer değiştirmedi. Ç, Ğ, İ, Ö, Ş, Ü ile başlayan bir isim olmadığı için sonuç aynı çıktı.
+3. Kayıp kayıtlar: cost_usd < 0.01 ile 8, >= 0.01 ile 3 satır geldi, toplam 11. 12 numaralı çağrıdan biri kayboldu: 11 numaralı çağrının maliyeti NULL olduğu için iki şarta da girmiyor.
+4. İki ortalama: Boşları atlayınca 0.0057, sıfır sayınca 0.0053 çıktı, fark 0.0004. Boşları atlayan daha dürüst, çünkü faturası gelmemiş çağrı bedava değil. Sıfır saymak ortalamayı yapay olarak düşürür.
 
 ## 6. Öz değerlendirme
 
@@ -109,29 +109,28 @@ Rubriğe ([RUBRIK.md](../RUBRIK.md)) göre kendine bir seviye ver. Bu puanını 
 
 | Ölçüt | 4 Tam | 3 İyi | 2 Gelişmeli | 1 Yetersiz |
 |---|---|---|---|---|
-| A, Doğruluk | ☐ | ☐ | ☐ | ☐ |
-| B, SQL kalitesi | ☐ | ☐ | ☐ | ☐ |
-| C, Yorum ve analiz | ☐ | ☐ | ☐ | ☐ |
-| D, Git ve PR disiplini | ☐ | ☐ | ☐ | ☐ |
-| E, Dürüstlük ve beyan | ☐ | ☐ | ☐ | ☐ |
+| A, Doğruluk | ☐ | ☐ | ☐ | ☐ | 4
+| B, SQL kalitesi | ☐ | ☐ | ☐ | ☐ | 3 
+| C, Yorum ve analiz | ☐ | ☐ | ☐ | ☐ | 3
+| D, Git ve PR disiplini | ☐ | ☐ | ☐ | ☐ | 2
+| E, Dürüstlük ve beyan | ☐ | ☐ | ☐ | ☐ | 4
 
 Bir dahaki ödevde daha iyi yapacağım şey:
 
-______________________________________________________________________
+__Bütün bölümleri okumadan başlamayacağım.
 
 ---
 
 ## 7. Bana sorun
 
 Anlamadığın, merak ettiğin ya da derste tekrar görmek istediğin bir konu:
-
-______________________________________________________________________
+_____________________________________________________________
 
 ______________________________________________________________________
 
 ---
 
-**İmza:** ________________________
+**İmza:** ____ismet PAŞALİOĞLU ____________________
 
 ---
 
