@@ -30,3 +30,24 @@ LEFT JOIN missions m
        ON m.robot_id = r.id
 WHERE m.id IS NULL;
 -- Yorum: 4 robot hiç görev almamış. Bunlar Kartal-04, Kartal-02, Mars-03 ve Atlas-03.
+
+-- Soru 4a: Görevi olan robotların toplam bataryası (JOIN ile - HATALI yöntem)
+SELECT SUM(r.battery_level) AS toplam_join
+FROM robots r
+JOIN missions m ON m.robot_id = r.id;
+-- Yorum: 700 çıktı. Birden fazla görevi olan robotun bataryası birden fazla sayıldı.
+-- Örneğin Kartal-01'in bataryası 18, 3 görevi olduğu için toplama 3 kez eklendi (18 yerine 54). 
+
+-- Soru 4b: Aynı toplam, her robot bir kez sayılarak (DOĞRU yöntem)
+SELECT SUM(battery_level) AS toplam_dogru
+FROM robots
+WHERE id IN (SELECT robot_id FROM missions);
+-- Yorum: 262 cikti. Her robot bir kez sayiliyor. Karsilastirma yaparsak 262 den 700 cikti.
+
+-- Soru 5: Robot başına görev sayısı, görevi olmayanlar 0 görünsün
+SELECT r.name, COUNT(m.id) AS gorev_sayisi
+FROM robots r
+LEFT JOIN missions m ON m.robot_id = r.id
+GROUP BY r.id, r.name
+ORDER BY gorev_sayisi DESC;
+-- Yorum: 0 olan 4 robot hic gorev almamis ve toplam 14 gorev alinmis bunlarin cogunu 3'er gorevle Kartal-01, Atlas-01 ve Kartal-03 robotlari almis
