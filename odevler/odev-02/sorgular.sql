@@ -51,3 +51,28 @@ LEFT JOIN missions m ON m.robot_id = r.id
 GROUP BY r.id, r.name
 ORDER BY gorev_sayisi DESC;
 -- Yorum: 0 olan 4 robot hic gorev almamis ve toplam 14 gorev alinmis bunlarin cogunu 3'er gorevle Kartal-01, Atlas-01 ve Kartal-03 robotlari almis
+
+-- =========================================
+-- BÖLÜM 2: Kendi projem (Kura #42 - müşteri hizmetleri talepleri)
+-- =========================================
+
+-- Proje Sorusu 1: Hangi konuda kaç talep var ve ortalama yanıt süresi ne? (ana soru: hangi konu)
+SELECT c.name                                  AS konu,
+       COUNT(t.id)                             AS talep_sayisi,
+       AVG(t.issue_responded_at - t.issue_reported_at) AS ort_yanit_suresi
+FROM tickets t
+JOIN categories c ON c.id = t.category_id
+GROUP BY c.name
+ORDER BY talep_sayisi DESC;
+-- Yorum: Sorgu tasarlanan şemaya göre yazıldı; veri yeni PostgreSQL kurulumuna henüz yüklenmedi, final öncesi çalıştırılacak.
+
+-- Proje Sorusu 2: Hangi saatte, hangi konuda talep yoğunlaşıyor? (ana soru: hangi saat aralığı)
+SELECT EXTRACT(HOUR FROM t.issue_reported_at) AS saat,
+       c.name                                 AS konu,
+       COUNT(*)                               AS talep_sayisi
+FROM tickets t
+JOIN categories c ON c.id = t.category_id
+GROUP BY saat, c.name
+ORDER BY talep_sayisi DESC
+LIMIT 10;
+-- Yorum: Sorgu tasarlanan şemaya göre yazıldı; veri yeni PostgreSQL kurulumuna henüz yüklenmedi, final öncesi çalıştırılacak.
